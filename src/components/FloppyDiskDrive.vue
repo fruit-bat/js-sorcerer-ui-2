@@ -1,0 +1,145 @@
+<template>
+  <v-card
+    class="pa-2"
+  >
+    {{driveLetter}}:
+    <v-btn
+      v-if="!diskNotPresent"
+      icon
+      flat
+      @click="eject"
+      :disabled="diskNotPresent || driveActive"
+    >
+      <v-icon>eject</v-icon>
+    </v-btn>
+    <v-btn
+      v-if="diskNotPresent"
+      icon
+      flat
+      @click="newDisk"
+      :disabled="!diskNotPresent || driveActive"
+    >
+      <v-icon>add</v-icon>
+    </v-btn>    
+    <led-indicator
+      :on="driveActive"
+      color="green"
+    />
+    <led-indicator
+      :on="driveWriting"
+      color="red"
+    />
+    <drop-zone
+      @file-for-upload="fileForUpload"
+    >
+      <floppy-disk
+        :not-present="diskNotPresent"
+      />
+    </drop-zone>
+  </v-card>
+</template>
+
+<script>
+  // TODO work out how to use project relative paths
+  import emulator from '../assets/emulator';
+  import FloppyDisk from './FloppyDisk';
+  import DropZone from './DropZone';
+  import ExidyArrayDisk from 'js-sorcerer/docs/ExidyArrayDisk';
+  import LedIndicator from './LedIndicator';
+  import { SECTORS_PER_TRACK, NUMBER_OF_TRACKS, BYTES_PER_SECTOR } from 'js-sorcerer/docs/ExidyDisk';
+
+  export default {
+    props: {
+      unit: {
+        default: 0,
+        type: Number
+      }
+    },
+    computed: {
+      driveLetter() {
+        return "ABCD".charAt(this.unit);
+      },
+      diskNotPresent() {
+        return this.floppyDisk === null;
+      }
+    },
+    mounted() {
+ 
+    },
+    data: () => ({
+      floppyDisk: null,
+      driveActive: false,
+      driveWriting: false,
+      driveWritingTimer: null,
+      diskRequiresSave: false
+    }),
+    methods:{
+	  newDisk() {
+        const array = new Uint8Array(SECTORS_PER_TRACK * NUMBER_OF_TRACKS * BYTES_PER_SECTOR);
+        const floppyDisk = new ExidyArrayDisk(array);
+        this.attachDisk(floppyDisk);
+	  },
+      eject() {
+        emulator.getDiskSystem().then(ds => {
+          ds.insertDisk(null, this.unit);
+          this.floppyDisk = null;
+          this.diskRequiresSave = false;
+        });
+      },
+      attachDisk(floppyDisk) {
+		const driveLetter = this.driveLetter;
+		const unit = this.unit;
+		const that = this;
+		const wrappedFloppyDisk = {
+		  read(track, sector, offset) {
+			return floppyDisk.read(track, sector, offset);
+		  },
+		  write(track, sector, offset, data) {
+			floppyDisk.write(track, sector, offset, data);
+			that.driveWriting = true;
+			that.diskRequiresSave = true;
+
+			if (that.driveWritingTimer) {
+			  clearTimeout(that.driveWritingTimer);
+			}
+			that.driveWritingTimer = setTimeout(() => {
+			  that.driveWriting = false;
+			  that.driveWritingTimer = null;
+			}, 4000);
+		  },
+		  activate() {
+			that.driveActive = true;
+		  },
+		  deactivate() {
+			that.driveActive = false;
+		  }              
+		};
+		emulator.getDiskSystem().then(ds => {
+		  ds.insertDisk(wrappedFloppyDisk, this.unit);
+		  this.floppyDisk = wrappedFloppyDisk;
+		  this.diskRequiresSave = false;
+		});		  
+	  },
+      fileForUpload(file) {
+        const reader = new FileReader();
+        reader.onloadend = evt => {
+          if (evt.target.readyState == FileReader.DONE) {
+            const blob = evt.target.result;
+            const array = new Uint8Array(blob);
+            const floppyDisk = new ExidyArrayDisk(array);
+            this.attachDisk(floppyDisk);
+          }
+        };
+        reader.readAsArrayBuffer(file);
+      }
+    },
+    components: {
+      FloppyDisk,
+      DropZone,
+      LedIndicator
+    }
+  }
+</script>
+<style>
+
+</style>
