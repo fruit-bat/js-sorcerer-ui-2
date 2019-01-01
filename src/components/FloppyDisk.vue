@@ -4,7 +4,8 @@
       src="../assets/floppy-disk.svg"
       width="70px"
       height="70px"
-      :style="{ opacity }"
+      :style="{ opacity, cursor: 'pointer' }"
+      @click="clicked"
     />
   </v-layout>
 </template>
@@ -20,7 +21,7 @@
     },
     computed: {
       opacity: function() {
-        return this.notPresent ? 0.25 : 1.0; 
+        return this.notPresent ? 0.20 : 1.0; 
       }
     },
     mounted() {
@@ -29,7 +30,9 @@
     data: () => ({
     }),
     methods:{
-
+      clicked(evt) {
+        this.$emit('click', evt);
+      }
     }
   }
 </script>
