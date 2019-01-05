@@ -19,6 +19,7 @@
       >
         <div
           class="floppy-disk-drive"
+          @click="diskClicked"
         >
           <div
             style="position:absolute;top:10px;background-color:#cca;padding:0px 5px 0px 5px;border-radius:3px"
@@ -30,14 +31,14 @@
             src="../assets/sa-400-open.svg"
             width="140px"
             height="90px"
-            @click="diskClicked"
+            draggable="false"
           />
           <img
             v-if="!diskNotPresent"
             src="../assets/sa-400-closed.svg"
             width="140px"
             height="90px"
-            @click="diskClicked"
+            draggable="false"
           />
           <div
             style="position:absolute;bottom:12px;"
@@ -59,16 +60,34 @@
       >
         <v-spacer></v-spacer>
         <v-btn
-        class="ma-0"
+          class="ma-0"
           icon
           flat
           @click="newDisk"
           :disabled="!diskNotPresent || driveActive"
         >
+          <v-icon small>create</v-icon>
+        </v-btn>
+        <v-btn
+          class="ma-0"
+          icon
+          flat
+          @click="uploadDisk"
+          :disabled="!diskNotPresent || driveActive"
+        >
           <v-icon>add</v-icon>
         </v-btn>
         <v-btn
-        class="ma-0"
+          class="ma-0"
+          icon
+          flat
+          @click="downloadDisk"
+          :disabled="diskNotPresent || driveActive"
+        >
+          <v-icon>save_alt</v-icon>
+        </v-btn>
+        <v-btn
+          class="ma-0"
           icon
           flat
           @click="eject"
@@ -145,12 +164,14 @@
         link.download="a.dsk";
         link.click();
       },
-      diskClicked() {
+      uploadDisk() {
         if (this.diskNotPresent) {
           this.$el.querySelector('input').click();
         }
-        else {
-          this.downloadDisk();
+      },
+      diskClicked() {
+        if (this.diskNotPresent) {
+          this.uploadDisk();
         }
       },
       newDisk() {
@@ -244,6 +265,7 @@
    border-radius: 3px;
    background-color: #444;
    position:relative;
+   user-select: none;
 }
 
 </style>

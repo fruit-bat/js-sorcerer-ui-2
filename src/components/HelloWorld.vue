@@ -36,16 +36,19 @@
         class="pa-1"
       />
       </v-layout>
+
+
       <a href="disks/bootable.dsk">
         <floppy-disk
           label="CP/M boot"
         />
-        <div
-          draggable="false"
-        >
-          bootable
-        </div>
       </a>
+      <a href="disks/disk1.dsk">
+        <floppy-disk
+          label="disk1"
+        />
+      </a>
+
       <v-btn
         icon
         flat
@@ -61,6 +64,7 @@
   // TODO work out how to use project relative paths
   import emulator from '../assets/emulator';
   import FloppyDiskDrive from './FloppyDiskDrive';
+
   import FloppyDisk from './FloppyDisk';
 
   export default {
