@@ -1,6 +1,6 @@
 <template>
   <v-card
-    class="pa-2"
+    class="pa-2 diskcard"
   >
     <input
       ref='input' 
@@ -12,33 +12,21 @@
       ref='link'
       style="display: none"
     />
-    {{driveLetter}}:
-    <v-btn
-      v-if="!diskNotPresent"
-      icon
-      flat
-      @click="eject"
-      :disabled="diskNotPresent || driveActive"
+    <v-layout row
+      color="grey darken-3"
+      dark
     >
-      <v-icon>eject</v-icon>
-    </v-btn>
-    <v-btn
-      v-if="diskNotPresent"
-      icon
-      flat
-      @click="newDisk"
-      :disabled="!diskNotPresent || driveActive"
-    >
-      <v-icon>add</v-icon>
-    </v-btn>    
-    <led-indicator
-      :on="driveActive"
-      color="green"
-    />
-    <led-indicator
-      :on="driveWriting"
-      color="red"
-    />
+     <div>{{driveLetter}}:</div>
+     <v-spacer></v-spacer>
+     <led-indicator
+        :on="driveActive"
+        color="green"
+      />
+      <led-indicator
+        :on="driveWriting"
+        color="red"
+      />
+    </v-layout>     
     <drop-zone
       @file-for-upload="fileForUpload"
     >
@@ -47,6 +35,30 @@
         @click="diskClicked"
       />
     </drop-zone>
+    
+    <v-card-actions
+      class="pa-0"
+    >
+      <v-spacer></v-spacer>
+      <v-btn
+        v-if="diskNotPresent"
+        icon
+        flat
+        @click="newDisk"
+        :disabled="!diskNotPresent || driveActive"
+      >
+        <v-icon>add</v-icon>
+      </v-btn> 
+      <v-btn
+        v-if="!diskNotPresent"
+        icon
+        flat
+        @click="eject"
+        :disabled="diskNotPresent || driveActive"
+      >
+        <v-icon>eject</v-icon>
+      </v-btn>
+    </v-card-actions>    
   </v-card>
 </template>
 
@@ -55,9 +67,9 @@
   import emulator from '../assets/emulator';
   import FloppyDisk from './FloppyDisk';
   import DropZone from './DropZone';
-  import ExidyArrayDisk from 'js-sorcerer/docs/ExidyArrayDisk';
+  import { ExidyArrayDisk } from 'js-sorcerer';
   import LedIndicator from './LedIndicator';
-  import { SECTORS_PER_TRACK, NUMBER_OF_TRACKS, BYTES_PER_SECTOR } from 'js-sorcerer/docs/ExidyDisk';
+  import { SECTORS_PER_TRACK, NUMBER_OF_TRACKS, BYTES_PER_SECTOR } from 'js-sorcerer';
 
   export default {
     props: {
@@ -72,17 +84,26 @@
       },
       diskNotPresent() {
         return this.floppyDisk === null;
+      },
+      driveWriting() {
+        return this.driveWritingTick > 0;
       }
     },
     mounted() {
- 
+      // TODO this needs disposing
+      this.driveWritingTimer = setInterval(
+        () => {
+          if (this.driveWritingTick > 0) --this.driveWritingTick;
+        },
+        1000
+      );
     },
     data: () => ({
       floppyDisk: null,
       diskArray: null,
       driveActive: false,
-      driveWriting: false,
       driveWritingTimer: null,
+      driveWritingTick: 0,
       diskRequiresSave: false
     }),
     methods: {
@@ -134,16 +155,8 @@
           },
           write(track, sector, offset, data) {
             floppyDisk.write(track, sector, offset, data);
-            that.driveWriting = true;
+            that.driveWritingTick = 5;
             that.diskRequiresSave = true;
-
-            if (that.driveWritingTimer) {
-              clearTimeout(that.driveWritingTimer);
-            }
-            that.driveWritingTimer = setTimeout(() => {
-              that.driveWriting = false;
-              that.driveWritingTimer = null;
-            }, 4000);
           },
           activate() {
             that.driveActive = true;
@@ -179,5 +192,8 @@
   }
 </script>
 <style>
-
+.diskcard {
+    flex:unset;
+    border-radius: 10px;
+}
 </style>

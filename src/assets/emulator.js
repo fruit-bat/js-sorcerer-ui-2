@@ -1,6 +1,4 @@
-import ExidyFileBinaryAjax from 'js-sorcerer/docs/ExidyFileBinaryAjax';
-import ExidySorcerer  from 'js-sorcerer/docs/ExidySorcerer';
-import ExidyBrowserKeyboard  from 'js-sorcerer/docs/ExidyBrowserKeyboard';
+import { ExidyFileBinaryAjax, ExidySorcerer, ExidyBrowserKeyboard } from 'js-sorcerer';
 
 const exidyFile = new ExidyFileBinaryAjax();
 const exidySorcerer = new ExidySorcerer(exidyFile);

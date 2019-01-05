@@ -2,8 +2,8 @@
 <template>
   <v-icon
     small
-    :color="color"
-    :style="{ opacity }"
+    :color="color + (on ? ' darken-1' : ' lighten-4')"
+    :style=" { position: 'relative', textShadow: '0 0 ' + (on ? '8' : '0') + 'px ' }"
   >
     lens
   </v-icon>

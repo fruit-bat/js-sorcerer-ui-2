@@ -13,12 +13,20 @@
           tabindex="0"
         />
       </v-flex>
+      <v-layout row>
       <floppy-disk-drive
         :unit="0"
       />
       <floppy-disk-drive
         :unit="1"
       />
+      <floppy-disk-drive
+        :unit="2"
+      />
+      <floppy-disk-drive
+        :unit="3"
+      />      
+      </v-layout>
       <v-btn
         icon
         flat
