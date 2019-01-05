@@ -19,7 +19,7 @@
   export default {
     props: {
       notPresent: {
-        default: true,
+        default: false,
         type: Boolean
       },
       label: {

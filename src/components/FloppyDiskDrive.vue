@@ -1,82 +1,83 @@
 <template>
   <div>
-  <v-card
-    class="pa-1 diskcard"
-  >
-    <input
-      ref='input'
-      type="file"
-      @change="onFileChange"
-      style="display: none"
-    />
-    <a
-      ref='link'
-      style="display: none"
-    />
-    <drop-zone
-      @file-for-upload="fileForUpload"
+    <v-card
+      class="pa-1 diskcard"
     >
-      <div
-        class="floppy-disk-drive"
+      <input
+        ref='input'
+        type="file"
+        @change="onFileChange"
+        style="display: none"
+      />
+      <a
+        ref='link'
+        style="display: none"
+      />
+      <drop-zone
+        @file-for-upload="fileForUpload"
+        @url-for-upload="urlForUpload"
       >
         <div
-          style="position:absolute;top:10px;background-color:#cca;padding:0px 5px 0px 5px;border-radius:3px"
+          class="floppy-disk-drive"
         >
-          {{driveLetter}}:
-        </div>
-        <img
-          v-if="diskNotPresent"
-          src="../assets/sa-400-open.svg"
-          width="140px"
-          height="90px"
-          @click="diskClicked"
-        />
-        <img
-          v-if="!diskNotPresent"
-          src="../assets/sa-400-closed.svg"
-          width="140px"
-          height="90px"
-          @click="diskClicked"
-        />
-        <div
-          style="position:absolute;bottom:12px;"
-        >
-         <led-indicator
-            :on="driveActive"
-            color="green"
+          <div
+            style="position:absolute;top:10px;background-color:#cca;padding:0px 5px 0px 5px;border-radius:3px"
+          >
+            {{driveLetter}}:
+          </div>
+          <img
+            v-if="diskNotPresent"
+            src="../assets/sa-400-open.svg"
+            width="140px"
+            height="90px"
+            @click="diskClicked"
           />
-          <led-indicator
-            :on="driveWriting"
-            color="red"
+          <img
+            v-if="!diskNotPresent"
+            src="../assets/sa-400-closed.svg"
+            width="140px"
+            height="90px"
+            @click="diskClicked"
           />
+          <div
+            style="position:absolute;bottom:12px;"
+          >
+           <led-indicator
+              :on="driveActive"
+              color="green"
+            />
+            <led-indicator
+              :on="driveWriting"
+              color="red"
+            />
+          </div>
         </div>
-      </div>
-    </drop-zone>
+      </drop-zone>
 
-    <v-card-actions
-      class="pa-0 pr-1"
-    >
-      <v-spacer></v-spacer>
-      <v-btn
-      class="ma-0"
-        icon
-        flat
-        @click="newDisk"
-        :disabled="!diskNotPresent || driveActive"
+      <v-card-actions
+        class="pa-0 pr-1"
       >
-        <v-icon>add</v-icon>
-      </v-btn>
-      <v-btn
-      class="ma-0"
-        icon
-        flat
-        @click="eject"
-        :disabled="diskNotPresent || driveActive"
-      >
-        <v-icon>eject</v-icon>
-      </v-btn>
-    </v-card-actions>
-  </v-card>
+        <v-spacer></v-spacer>
+        <v-btn
+        class="ma-0"
+          icon
+          flat
+          @click="newDisk"
+          :disabled="!diskNotPresent || driveActive"
+        >
+          <v-icon>add</v-icon>
+        </v-btn>
+        <v-btn
+        class="ma-0"
+          icon
+          flat
+          @click="eject"
+          :disabled="diskNotPresent || driveActive"
+        >
+          <v-icon>eject</v-icon>
+        </v-btn>
+      </v-card-actions>
+    </v-card>
   </div>
 </template>
 
@@ -107,8 +108,10 @@
         return this.driveWritingTick > 0;
       }
     },
+    beforeDestroy() {
+      clearInterval(this.driveWritingTimer);
+    },
     mounted() {
-      // TODO this needs disposing
       this.driveWritingTimer = setInterval(
         () => {
           if (this.driveWritingTick > 0) --this.driveWritingTick;
@@ -200,6 +203,27 @@
           }
         };
         reader.readAsArrayBuffer(file);
+      },
+      checkResponseStatus(response) {
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status} - ${response.statusText}`);
+        }
+        return response;
+      },
+      urlForUpload(url) {
+        console.log('Load disk from URL ' + url);
+        fetch(url)
+          .then(response => {
+            console.log(response);
+            return this.checkResponseStatus(response) && response.arrayBuffer();
+          })
+          .then(buffer => {
+            console.log(buffer);
+            const array = new Uint8Array(buffer);
+            this.attachDisk(array);
+          })
+          .catch(err => console.error(err)); // Never forget the final catch!
+
       }
     },
     components: {
