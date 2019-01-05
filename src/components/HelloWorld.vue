@@ -4,7 +4,11 @@
       text-xs-center
       wrap
     >
-      <v-flex xs12>
+      <v-flex xs12 class="pa-1">
+        <v-card
+          class="pa-2"
+          style="flex:unset;border-radius:10px;width:fit-content;"
+        >
         <div
           class="exidy-screen-container"
           @keyup="keyupHandler"
@@ -12,19 +16,24 @@
           ref="screen"
           tabindex="0"
         />
+        </v-card>
       </v-flex>
-      <v-layout row>
+      <v-layout row >
       <floppy-disk-drive
         :unit="0"
+        class="pa-1"
       />
       <floppy-disk-drive
         :unit="1"
+        class="pa-1"
       />
       <floppy-disk-drive
         :unit="2"
+        class="pa-1"
       />
       <floppy-disk-drive
         :unit="3"
+        class="pa-1"
       />      
       </v-layout>
       <v-btn
@@ -75,7 +84,7 @@
   .exidy-screen-container {
     background-color: #000;
     border:5px solid #000;
-    border-radius: 5px;
+    border-radius: 5px !important;
     width: 512px;
     height: 480px;
     box-sizing: content-box;

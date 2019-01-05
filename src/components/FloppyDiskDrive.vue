@@ -1,56 +1,73 @@
 <template>
+  <div>
   <v-card
-    class="pa-2 diskcard"
+    class="pa-1 diskcard"
   >
     <input
-      ref='input' 
-      type="file" 
-      @change="onFileChange" 
+      ref='input'
+      type="file"
+      @change="onFileChange"
       style="display: none"
     />
     <a
       ref='link'
       style="display: none"
     />
-    <v-layout row
-      color="grey darken-3"
-      dark
-    >
-     <div>{{driveLetter}}:</div>
-     <v-spacer></v-spacer>
-     <led-indicator
-        :on="driveActive"
-        color="green"
-      />
-      <led-indicator
-        :on="driveWriting"
-        color="red"
-      />
-    </v-layout>     
     <drop-zone
       @file-for-upload="fileForUpload"
     >
-      <floppy-disk
-        :not-present="diskNotPresent"
-        @click="diskClicked"
-      />
+      <div
+        class="floppy-disk-drive"
+      >
+        <div
+          style="position:absolute;top:10px;background-color:#cca;padding:0px 5px 0px 5px;border-radius:3px"
+        >
+          {{driveLetter}}:
+        </div>
+        <img
+          v-if="diskNotPresent"
+          src="../assets/sa-400-open.svg"
+          width="140px"
+          height="90px"
+          @click="diskClicked"
+        />
+        <img
+          v-if="!diskNotPresent"
+          src="../assets/sa-400-closed.svg"
+          width="140px"
+          height="90px"
+          @click="diskClicked"
+        />
+        <div
+          style="position:absolute;bottom:12px;"
+        >
+         <led-indicator
+            :on="driveActive"
+            color="green"
+          />
+          <led-indicator
+            :on="driveWriting"
+            color="red"
+          />
+        </div>
+      </div>
     </drop-zone>
-    
+
     <v-card-actions
-      class="pa-0"
+      class="pa-0 pr-1"
     >
       <v-spacer></v-spacer>
       <v-btn
-        v-if="diskNotPresent"
+      class="ma-0"
         icon
         flat
         @click="newDisk"
         :disabled="!diskNotPresent || driveActive"
       >
         <v-icon>add</v-icon>
-      </v-btn> 
+      </v-btn>
       <v-btn
-        v-if="!diskNotPresent"
+      class="ma-0"
         icon
         flat
         @click="eject"
@@ -58,8 +75,9 @@
       >
         <v-icon>eject</v-icon>
       </v-btn>
-    </v-card-actions>    
+    </v-card-actions>
   </v-card>
+  </div>
 </template>
 
 <script>
@@ -122,8 +140,8 @@
         const link = this.$refs.link;
         link.href = window.URL.createObjectURL(blob);
         link.download="a.dsk";
-        link.click();        
-      },      
+        link.click();
+      },
       diskClicked() {
         if (this.diskNotPresent) {
           this.$el.querySelector('input').click();
@@ -145,7 +163,7 @@
         });
       },
       attachDisk(array) {
-        const floppyDisk = new ExidyArrayDisk(array);        
+        const floppyDisk = new ExidyArrayDisk(array);
         const driveLetter = this.driveLetter;
         const unit = this.unit;
         const that = this;
@@ -163,14 +181,14 @@
           },
           deactivate() {
             that.driveActive = false;
-          }              
+          }
         };
         emulator.getDiskSystem().then(ds => {
           ds.insertDisk(wrappedFloppyDisk, this.unit);
           this.floppyDisk = wrappedFloppyDisk;
           this.diskRequiresSave = false;
           this.diskArray = array;
-        });      
+        });
       },
       fileForUpload(file) {
         const reader = new FileReader();
@@ -193,7 +211,15 @@
 </script>
 <style>
 .diskcard {
-    flex:unset;
-    border-radius: 10px;
+  border-radius: 10px;
 }
+
+.floppy-disk-drive {
+   padding-left: 10px;
+   padding-right: 10px;
+   border-radius: 3px;
+   background-color: #444;
+   position:relative;
+}
+
 </style>
