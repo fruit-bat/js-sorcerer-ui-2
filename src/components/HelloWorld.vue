@@ -56,6 +56,10 @@
       >
         <v-icon>power_settings_new</v-icon>
       </v-btn>
+
+      <simple-printer
+        class="pa-1"
+      />
     </v-layout>
   </v-container>
 </template>
@@ -63,6 +67,9 @@
 <script>
   // TODO work out how to use project relative paths
   import emulator from '../assets/emulator';
+  import SimplePrinter from './SimplePrinter';
+
+
   import FloppyDiskDrive from './FloppyDiskDrive';
 
   import FloppyDisk from './FloppyDisk';
@@ -92,7 +99,8 @@
     },
     components: {
       FloppyDiskDrive,
-      FloppyDisk
+      FloppyDisk,
+      SimplePrinter
     }
   }
 </script>
