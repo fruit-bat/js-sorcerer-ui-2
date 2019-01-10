@@ -2,6 +2,7 @@
   <div>
     <v-card
       class="pa-1 diskcard"
+      style="width:fit-content"
     >
       <input
         ref='input'
@@ -103,7 +104,6 @@
 <script>
   // TODO work out how to use project relative paths
   import emulator from '../assets/emulator';
-  import FloppyDisk from './FloppyDisk';
   import DropZone from './DropZone';
   import { ExidyArrayDisk } from 'js-sorcerer';
   import LedIndicator from './LedIndicator';
@@ -187,6 +187,10 @@
         });
       },
       attachDisk(array) {
+        if (array.length != 332640) {
+          console.log('Wrong length for disk: ' + array.length);
+        }
+
         const floppyDisk = new ExidyArrayDisk(array);
         const driveLetter = this.driveLetter;
         const unit = this.unit;
@@ -215,6 +219,7 @@
         });
       },
       fileForUpload(file) {
+        // TODO Check file length
         const reader = new FileReader();
         reader.onloadend = evt => {
           if (evt.target.readyState == FileReader.DONE) {
@@ -233,6 +238,7 @@
       },
       urlForUpload(url) {
         console.log('Load disk from URL ' + url);
+        // TODO limit read length
         fetch(url)
           .then(response => {
             console.log(response);
@@ -248,7 +254,6 @@
       }
     },
     components: {
-      FloppyDisk,
       DropZone,
       LedIndicator
     }

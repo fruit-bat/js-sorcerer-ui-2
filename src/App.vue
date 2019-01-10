@@ -15,7 +15,9 @@
       </v-btn>
     </v-toolbar>
 
-    <v-content>
+    <v-content
+      style="background-color: darkslategrey;"
+    >
       <HelloWorld/>
     </v-content>
   </v-app>

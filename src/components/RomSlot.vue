@@ -1,0 +1,174 @@
+<template>
+  <div>
+    <v-card
+      class="pa-1 romcard"
+    >
+      <input
+        ref='input'
+        type="file"
+        @change="onFileChange"
+        style="display: none"
+      />
+      <a
+        ref='link'
+        style="display: none"
+      />
+      <drop-zone
+        @file-for-upload="fileForUpload"
+        @url-for-upload="urlForUpload"
+      >
+        <div
+          @click="romClicked"
+        >
+          <rom
+            :disabled="romNotPresent"
+            :label="romLabel"
+          />
+        </div>
+      </drop-zone>
+
+      <v-card-actions
+        class="pa-0 pr-1"
+      >
+        <v-spacer></v-spacer>
+        <v-btn
+          class="ma-0"
+          icon
+          flat
+          @click="uploadRom"
+        >
+          <v-icon>add</v-icon>
+        </v-btn>
+        <v-btn
+          class="ma-0"
+          icon
+          flat
+          @click="downloadRom"
+          :disabled="romNotPresent"
+        >
+          <v-icon>save_alt</v-icon>
+        </v-btn>
+        <v-btn
+          class="ma-0"
+          icon
+          flat
+          @click="eject"
+          :disabled="romNotPresent"
+        >
+          <v-icon>eject</v-icon>
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </div>
+</template>
+
+<script>
+  import emulator from '../assets/emulator';
+  import Rom from './Rom';
+  import DropZone from './DropZone';
+
+  export default {
+    props: {
+    },
+    computed: {
+      romNotPresent() {
+        return this.rom === null;
+      }
+    },
+    mounted() {
+    },
+    data: () => ({
+      rom: null, //TODO probably do not need to hold onto this array,
+      romLabel: null
+    }),
+    methods: {
+      onFileChange(e) {
+        this.handleFiles(e.target.files);
+      },
+      handleFiles(files) {
+        for (let i = 0; i < files.length; i++) {
+          this.fileForUpload(files[i]);
+        }
+      },
+      downloadRom() {
+        const blob = new Blob([this.romArray], {type: "application/binary"});
+        const link = this.$refs.link;
+        link.href = window.URL.createObjectURL(blob);
+        link.download="a.rom";
+        link.click();
+      },
+      uploadRom() {
+        if (this.romNotPresent) {
+          this.$el.querySelector('input').click();
+        }
+      },
+      romClicked() {
+        this.uploadDisk();
+      },
+      eject() {
+        this.rom = null;
+        this.romLabel = null;
+        emulator.ejectRom();
+      },
+      insertRom(array, name) {
+        if (array.length === 0x2000) {
+          this.rom = array;
+          this.romLabel = name;
+          emulator.insertRom(array);
+        }
+        else{
+          // TODO
+          console.log('Rom is wrong length: ' + array.length);
+        }
+      },
+      fileForUpload(file) {
+        // TODO Check file length
+        const reader = new FileReader();
+        reader.onloadend = evt => {
+          if (evt.target.readyState == FileReader.DONE) {
+            const blob = evt.target.result;
+            const array = new Uint8Array(blob);
+            this.insertRom(array);
+          }
+        };
+        reader.readAsArrayBuffer(file);
+      },
+      checkResponseStatus(response) {
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status} - ${response.statusText}`);
+        }
+        return response;
+      },
+      urlForUpload(url) {
+        console.log('Load rom from URL ' + url);
+        // TODO limit read length
+        fetch(url)
+          .then(response => {
+            console.log(response);
+            const url = decodeURI(response.url);
+            console.log(url);
+            const lastElement = url.substr(url.lastIndexOf('/') + 1);
+            console.log(lastElement);
+            const name = lastElement.replace(/\.[^/.]+$/, "")
+            console.log(name);
+            this.checkResponseStatus(response);
+            response.arrayBuffer().then(buffer => {
+              console.log(buffer);
+              const array = new Uint8Array(buffer);
+              this.insertRom(array, name);
+            });
+          })
+          .catch(err => console.error(err)); // Never forget the final catch!
+      }
+    },
+    components: {
+      Rom,
+      DropZone
+    }
+  }
+</script>
+<style>
+.romcard {
+  border-radius: 10px;
+}
+</style>

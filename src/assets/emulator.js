@@ -29,8 +29,20 @@ export default {
     return exidySorcerer.obtainDiskSystem();
   },
 
+  getTapeSystem() {
+    return exidySorcerer.obtainTapeSystem();
+  },
+
   attachPrinter(printer) {
     exidySorcerer.centronics = printer;
+  },
+
+  insertRom(rom) {
+    exidySorcerer.loadRomFromArray(rom);
+  },
+
+  ejectRom() {
+    exidySorcerer.ejectRom();
   }
 
 }

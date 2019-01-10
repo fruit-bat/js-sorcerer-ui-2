@@ -3,11 +3,12 @@
     :style="{ opacity, cursor: 'pointer', position: 'relative' }"
   >
     <div
-      class="disk-label"
+      v-if="label"
+      class="rom-label"
     >{{label}}</div>
     <img
-      src="../assets/floppy-disk.svg"
-      width="130px"
+      src="../assets/rom-chip.svg"
+      height="85px"
       @click="clicked"
     />
   </div>
@@ -44,17 +45,15 @@
   }
 </script>
 <style>
-.disk-label {
-    color: black;
-    position: absolute;
-    top: 6px;
-    font-size: 11px;
-    left: 5px;
-    width: 115px;
-    height: 34px;
-    background-color: #cca;
-    padding: 0px 5px 0px 5px;
-    border-radius: 3px;
-    text-align: left;
+.rom-label {
+  color: black;
+  position: absolute;
+  top: 28px;
+  font-size: 11px;
+  left: 10px;
+  width: 115px;
+  background-color:#cca;
+  padding:0px 5px 0px 5px;
+  border-radius:3px
 }
 </style>

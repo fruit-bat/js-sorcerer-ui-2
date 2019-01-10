@@ -4,50 +4,71 @@
       text-xs-center
       wrap
     >
-      <v-flex xs12 class="pa-1">
-        <v-card
-          class="pa-2"
-          style="flex:unset;border-radius:10px;width:fit-content;"
-        >
-        <div
-          class="exidy-screen-container"
-          @keyup="keyupHandler"
-          @keydown="keydownHandler"
-          ref="screen"
-          tabindex="0"
+      <v-layout row>
+        <screen
+          class="pa-1"
         />
-        </v-card>
-      </v-flex>
-      <v-layout row >
-      <floppy-disk-drive
-        :unit="0"
-        class="pa-1"
-      />
-      <floppy-disk-drive
-        :unit="1"
-        class="pa-1"
-      />
-      <floppy-disk-drive
-        :unit="2"
-        class="pa-1"
-      />
-      <floppy-disk-drive
-        :unit="3"
-        class="pa-1"
-      />
+
+        <v-layout column>
+          <v-layout row>
+            <div>
+              <v-layout row>
+                <floppy-disk-drive
+                  :unit="0"
+                  class="pa-1"
+                />
+                <floppy-disk-drive
+                  :unit="1"
+                  class="pa-1"
+                />
+              </v-layout>
+              <v-layout row>
+                <floppy-disk-drive
+                  :unit="2"
+                  class="pa-1"
+                />
+                <floppy-disk-drive
+                  :unit="3"
+                  class="pa-1"
+                />
+              </v-layout>
+              <v-layout row>
+                <tape-drive
+                  :unit="0"
+                  class="pa-1"
+                />
+                <tape-drive
+                  :unit="1"
+                  class="pa-1"
+                />
+              </v-layout>
+            </div>
+            <floppy-disk-box
+              class="pa-1"
+            />
+          </v-layout>
+        </v-layout>
+
       </v-layout>
 
 
-      <a href="disks/bootable.dsk">
-        <floppy-disk
-          label="CP/M boot"
+      <tape-box
+        class="pa-1"
+      />
+
+      <rom-slot
+        class="pa-1"
+      />
+
+      <a
+        href="rom-packs/Exidy Standard Basic Ver 1.0 (1978).ROM"
+        style="width:fit-content;height:fit-content;"
+      >
+        <rom
+          label="Exidy Standard Basic Ver 1.0 (1978)"
         />
       </a>
-      <a href="disks/disk1.dsk">
-        <floppy-disk
-          label="disk1"
-        />
-      </a>
+
 
       <v-btn
         icon
@@ -73,26 +94,20 @@
   import FloppyDiskDrive from './FloppyDiskDrive';
 
   import FloppyDisk from './FloppyDisk';
+  import FloppyDiskBox from './FloppyDiskBox';
+  import Rom from './Rom';
+  import RomSlot from './RomSlot';
+  import Screen from './Screen';
+  import TapeBox from './TapeBox';
+  import TapeDrive from './TapeDrive';
 
   export default {
     mounted() {
-      const screenContainer = this.$refs.screen;
-      screenContainer.appendChild(emulator.getCanvas());
       emulator.run();
     },
     data: () => ({
     }),
     methods:{
-      keydownHandler(key) {
-        emulator.getKeyboard().browserKeyDown(key.keyCode);
-        key.stopPropagation();
-        key.preventDefault();
-      },
-      keyupHandler(key) {
-        emulator.getKeyboard().browserKeyUp(key.keyCode);
-        key.stopPropagation();
-        key.preventDefault();
-      },
       reset() {
         emulator.reset();
       }
@@ -100,26 +115,15 @@
     components: {
       FloppyDiskDrive,
       FloppyDisk,
-      SimplePrinter
+      SimplePrinter,
+      Rom,
+      RomSlot,
+      Screen,
+      FloppyDiskBox,
+      TapeBox,
+      TapeDrive
     }
   }
 </script>
 <style>
-  .exidy-screen-container {
-    background-color: #000;
-    border:5px solid #000;
-    border-radius: 5px !important;
-    width: 512px;
-    height: 480px;
-    box-sizing: content-box;
-  }
-  .exidy-screen-container canvas {
-    image-rendering: optimizeSpeed;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: optimize-contrast;
-    image-rendering: pixelated;
-    -ms-interpolation-mode: nearest-neighbor;
-    width: 512px; height: 480px;
-  }
 </style>
