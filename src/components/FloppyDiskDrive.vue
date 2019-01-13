@@ -1,108 +1,104 @@
 <template>
-  <div>
-    <v-card
-      class="pa-1 diskcard"
-      style="width:fit-content"
+  <equipment>
+    <input
+      ref='input'
+      type="file"
+      @change="onFileChange"
+      style="display: none"
+    />
+    <a
+      ref='link'
+      style="display: none"
+    />
+    <drop-zone
+      @file-for-upload="fileForUpload"
+      @url-for-upload="urlForUpload"
     >
-      <input
-        ref='input'
-        type="file"
-        @change="onFileChange"
-        style="display: none"
-      />
-      <a
-        ref='link'
-        style="display: none"
-      />
-      <drop-zone
-        @file-for-upload="fileForUpload"
-        @url-for-upload="urlForUpload"
+      <div
+        class="floppy-disk-drive"
+        @click="diskClicked"
       >
         <div
-          class="floppy-disk-drive"
-          @click="diskClicked"
+          style="position:absolute;top:10px;background-color:#cca;padding:0px 5px 0px 5px;border-radius:3px"
         >
-          <div
-            style="position:absolute;top:10px;background-color:#cca;padding:0px 5px 0px 5px;border-radius:3px"
-          >
-            {{driveLetter}}:
-          </div>
-          <img
-            v-if="diskNotPresent"
-            src="../assets/sa-400-open.svg"
-            width="140px"
-            height="90px"
-            draggable="false"
-          />
-          <img
-            v-if="!diskNotPresent"
-            src="../assets/sa-400-closed.svg"
-            width="140px"
-            height="90px"
-            draggable="false"
-          />
-          <div
-            style="position:absolute;bottom:12px;"
-          >
-           <led-indicator
-              :on="driveActive"
-              color="green"
-            />
-            <led-indicator
-              :on="driveWriting"
-              color="red"
-            />
-          </div>
+          {{driveLetter}}:
         </div>
-      </drop-zone>
+        <img
+          v-if="diskNotPresent"
+          src="../assets/sa-400-open.svg"
+          width="140px"
+          height="90px"
+          draggable="false"
+        />
+        <img
+          v-if="!diskNotPresent"
+          src="../assets/sa-400-closed.svg"
+          width="140px"
+          height="90px"
+          draggable="false"
+        />
+        <div
+          style="position:absolute;bottom:12px;"
+        >
+         <led-indicator
+            :on="driveActive"
+            color="green"
+          />
+          <led-indicator
+            :on="driveWriting"
+            color="red"
+          />
+        </div>
+      </div>
+    </drop-zone>
 
-      <v-card-actions
-        class="pa-0 pr-1"
-      >
-        <v-spacer></v-spacer>
-        <v-btn
-          class="ma-0"
-          icon
-          flat
-          @click="newDisk"
-          :disabled="!diskNotPresent || driveActive"
-        >
-          <v-icon small>create</v-icon>
-        </v-btn>
-        <v-btn
-          class="ma-0"
-          icon
-          flat
-          @click="uploadDisk"
-          :disabled="!diskNotPresent || driveActive"
-        >
-          <v-icon>add</v-icon>
-        </v-btn>
-        <v-btn
-          class="ma-0"
-          icon
-          flat
-          @click="downloadDisk"
-          :disabled="diskNotPresent || driveActive"
-        >
-          <v-icon>save_alt</v-icon>
-        </v-btn>
-        <v-btn
-          class="ma-0"
-          icon
-          flat
-          @click="eject"
-          :disabled="diskNotPresent || driveActive"
-        >
-          <v-icon>eject</v-icon>
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </div>
+    <v-btn
+      slot="actions"
+      class="ma-0"
+      icon
+      flat
+      @click="newDisk"
+      :disabled="!diskNotPresent || driveActive"
+    >
+      <v-icon small>create</v-icon>
+    </v-btn>
+    <v-btn
+      slot="actions"
+      class="ma-0"
+      icon
+      flat
+      @click="uploadDisk"
+      :disabled="!diskNotPresent || driveActive"
+    >
+      <v-icon>add</v-icon>
+    </v-btn>
+    <v-btn
+      slot="actions"
+      class="ma-0"
+      icon
+      flat
+      @click="downloadDisk"
+      :disabled="diskNotPresent || driveActive"
+    >
+      <v-icon>save_alt</v-icon>
+    </v-btn>
+    <v-btn
+      slot="actions"
+      class="ma-0"
+      icon
+      flat
+      @click="eject"
+      :disabled="diskNotPresent || driveActive"
+    >
+      <v-icon>eject</v-icon>
+    </v-btn>
+
+  </equipment>
 </template>
 
 <script>
   // TODO work out how to use project relative paths
+  import Equipment from './Equipment';
   import emulator from '../assets/emulator';
   import DropZone from './DropZone';
   import { ExidyArrayDisk } from 'js-sorcerer';
@@ -255,7 +251,8 @@
     },
     components: {
       DropZone,
-      LedIndicator
+      LedIndicator,
+      Equipment
     }
   }
 </script>

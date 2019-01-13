@@ -1,54 +1,53 @@
 <template>
-  <div>
-    <v-card
-      style="border-radius:10px;"
-    >
-      <div class="pa-2">
-        <div
-          class="pa-1 printer-paper"
-          ref="paper"
-        />
-      </div>
+  <equipment>
+    <a
+      ref='link'
+      style="display: none"
+    />
+    <div class="pa-1">
+      <div
+        class="pa-1 printer-paper"
+        ref="paper"
+      />
+    </div>
 
-      <v-card-actions
-        class="pa-0 pr-1 pl-2"
+    <v-btn
+      slot="options"
+      class="ma-0"
+      icon
+      flat
+      @click="autoScroll = !autoScroll"
+    >
+      <v-icon
+        :style="{ opacity : autoScroll ? 1.0 : .25 }"
       >
-        <v-btn
-          class="ma-0"
-          icon
-          flat
-          @click="autoScroll = !autoScroll"
-        >
-          <v-icon
-            :style="{ opacity : autoScroll ? 1.0 : .25 }"
-          >
-            {{autoScroll ? 'toggle_on' : 'toggle_off'}}
-          </v-icon>
-        </v-btn>
-        <v-spacer></v-spacer>
-        <v-btn
-          class="ma-0"
-          icon
-          flat
-          @click=""
-        >
-          <v-icon>save_alt</v-icon>
-        </v-btn>
-        <v-btn
-          class="ma-0"
-          icon
-          flat
-          @click="clear"
-        >
-          <v-icon>eject</v-icon>
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </div>
+        {{autoScroll ? 'toggle_on' : 'toggle_off'}}
+      </v-icon>
+    </v-btn>
+    <v-btn
+      slot="actions"
+      class="ma-0"
+      icon
+      flat
+      @click="saveText"
+    >
+      <v-icon>save_alt</v-icon>
+    </v-btn>
+    <v-btn
+      slot="actions"
+      class="ma-0"
+      icon
+      flat
+      @click="clear"
+    >
+      <v-icon>eject</v-icon>
+    </v-btn>
+  </equipment>
 </template>
 <script>
   import emulator from '../assets/emulator';
   import { ExidyElementPrinter } from 'js-sorcerer';
+  import Equipment from './Equipment';
 
   export default {
     props: {
@@ -71,9 +70,21 @@
       }
     },
     methods:{
+      saveText() {
+        const text = this._printer.getText();
+        console.log(text);
+        const blob = new Blob([text], {type: "application/binary"});
+        const link = this.$refs.link;
+        link.href = window.URL.createObjectURL(blob);
+        link.download="p.txt";
+        link.click();
+      },
       clear() {
         this._printer.clear();
       }
+    },
+    components: {
+      Equipment
     }
   }
 </script>

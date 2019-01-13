@@ -1,9 +1,5 @@
 <template>
-  <div>
-    <v-card
-      class="pa-2"
-      style="flex:unset;border-radius:10px;width:fit-content;"
-    >
+  <equipment>
     <div
       class="exidy-screen-container"
       @keyup="keyupHandler"
@@ -11,13 +7,27 @@
       ref="screen"
       tabindex="0"
     />
-    </v-card>
-  </div>
+    <toggle
+      class="ma-0"
+      slot="options"
+      v-model="govern"
+    />
+    <v-btn
+      slot="actions"
+      icon
+      flat
+      @click="reset"
+    >
+      <v-icon>power_settings_new</v-icon>
+    </v-btn>
+  </equipment>
 </template>
 
 <script>
 
   import emulator from '../assets/emulator';
+  import Equipment from './Equipment';
+  import Toggle from './Toggle';
 
   export default {
     mounted() {
@@ -25,6 +35,7 @@
       screenContainer.appendChild(emulator.getCanvas());
     },
     data: () => ({
+      govern: true
     }),
     methods:{
       keydownHandler(key) {
@@ -36,9 +47,19 @@
         emulator.getKeyboard().browserKeyUp(key.keyCode);
         key.stopPropagation();
         key.preventDefault();
+      },
+      reset() {
+        emulator.reset();
+      }
+    },
+    watch: {
+      govern() {
+        emulator.govern(this.govern);
       }
     },
     components: {
+      Equipment,
+      Toggle
     }
   }
 </script>

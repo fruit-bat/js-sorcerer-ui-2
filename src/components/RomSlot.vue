@@ -1,71 +1,66 @@
 <template>
-  <div>
-    <v-card
-      class="pa-1 romcard"
+  <equipment>
+    <input
+      ref='input'
+      type="file"
+      @change="onFileChange"
+      style="display: none"
+    />
+    <a
+      ref='link'
+      style="display: none"
+    />
+    <drop-zone
+      @file-for-upload="fileForUpload"
+      @url-for-upload="urlForUpload"
     >
-      <input
-        ref='input'
-        type="file"
-        @change="onFileChange"
-        style="display: none"
-      />
-      <a
-        ref='link'
-        style="display: none"
-      />
-      <drop-zone
-        @file-for-upload="fileForUpload"
-        @url-for-upload="urlForUpload"
+      <div
+        @click="romClicked"
       >
-        <div
-          @click="romClicked"
-        >
-          <rom
-            :disabled="romNotPresent"
-            :label="romLabel"
-          />
-        </div>
-      </drop-zone>
+        <rom
+          :disabled="romNotPresent"
+          :label="romLabel"
+        />
+      </div>
+    </drop-zone>
 
-      <v-card-actions
-        class="pa-0 pr-1"
-      >
-        <v-spacer></v-spacer>
-        <v-btn
-          class="ma-0"
-          icon
-          flat
-          @click="uploadRom"
-        >
-          <v-icon>add</v-icon>
-        </v-btn>
-        <v-btn
-          class="ma-0"
-          icon
-          flat
-          @click="downloadRom"
-          :disabled="romNotPresent"
-        >
-          <v-icon>save_alt</v-icon>
-        </v-btn>
-        <v-btn
-          class="ma-0"
-          icon
-          flat
-          @click="eject"
-          :disabled="romNotPresent"
-        >
-          <v-icon>eject</v-icon>
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </div>
+    <v-btn
+      slot="actions"
+      class="ma-0"
+      icon
+      flat
+      @click="uploadRom"
+    >
+      <v-icon>add</v-icon>
+    </v-btn>
+    <v-btn
+      slot="actions"
+      class="ma-0"
+      icon
+      flat
+      @click="downloadRom"
+      :disabled="romNotPresent"
+    >
+      <v-icon>save_alt</v-icon>
+    </v-btn>
+    <v-btn
+      slot="actions"
+      class="ma-0"
+      icon
+      flat
+      @click="eject"
+      :disabled="romNotPresent"
+    >
+      <v-icon>eject</v-icon>
+    </v-btn>
+  </equipment>
 </template>
 
 <script>
   import emulator from '../assets/emulator';
   import Rom from './Rom';
   import DropZone from './DropZone';
+  import Equipment from './Equipment';
 
   export default {
     props: {
@@ -163,7 +158,8 @@
     },
     components: {
       Rom,
-      DropZone
+      DropZone,
+      Equipment
     }
   }
 </script>

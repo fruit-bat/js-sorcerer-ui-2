@@ -1,100 +1,94 @@
 
 <template>
-  <div>
-    <v-card
-      class="pa-1 tapecard"
-      style="width:fit-content"
+  <equipment>
+    <input
+      ref='input'
+      type="file"
+      @change="onFileChange"
+      style="display: none"
+    />
+    <a
+      ref='link'
+      style="display: none"
+    />
+    <drop-zone
+      @file-for-upload="fileForUpload"
+      @url-for-upload="urlForUpload"
     >
-      <input
-        ref='input'
-        type="file"
-        @change="onFileChange"
-        style="display: none"
-      />
-      <a
-        ref='link'
-        style="display: none"
-      />
-      <drop-zone
-        @file-for-upload="fileForUpload"
-        @url-for-upload="urlForUpload"
+      <div
+        class="tape-drive"
+        @click="tapeClicked"
       >
         <div
-          class="tape-drive"
-          @click="tapeClicked"
+          style="background:#222;border-style:solid;border-radius:7px;border-width:4px;"
         >
           <div
-            style="background:#222;border-style:solid;border-radius:7px;border-width:4px;"
           >
-            <div
-            >
-            <tape
-              :style="{ opacity: tapeNotPresent ? 0 : 1}"
-            />
-            </div>
+          <tape
+            :style="{ opacity: tapeNotPresent ? 0 : 1}"
+          />
           </div>
-          <v-layout row>
-           <led-indicator
-              :on="playing"
-              color="green"
-            />
-            <led-indicator
-              :on="recording"
-              color="red"
-            />
-            <v-spacer />
-            <div
-              class="tape-drive-label"
-            >
-              tape {{unit}}
-            </div>
-          </v-layout>
         </div>
-      </drop-zone>
+        <v-layout row>
+         <led-indicator
+            :on="playing"
+            color="green"
+          />
+          <led-indicator
+            :on="recording"
+            color="red"
+          />
+          <v-spacer />
+          <div
+            class="tape-drive-label"
+          >
+            tape {{unit}}
+          </div>
+        </v-layout>
+      </div>
+    </drop-zone>
 
-      <v-card-actions
-        class="pa-0 pr-1"
-      >
-        <v-spacer></v-spacer>
-        <v-btn
-          class="ma-0"
-          icon
-          flat
-          @click="newTape"
-          :disabled="!tapeNotPresent || playing"
-        >
-          <v-icon small>create</v-icon>
-        </v-btn>
-        <v-btn
-          class="ma-0"
-          icon
-          flat
-          @click="uploadTape"
-          :disabled="!tapeNotPresent || playing"
-        >
-          <v-icon>add</v-icon>
-        </v-btn>
-        <v-btn
-          class="ma-0"
-          icon
-          flat
-          @click="downloadTape"
-          :disabled="tapeNotPresent || playing"
-        >
-          <v-icon>save_alt</v-icon>
-        </v-btn>
-        <v-btn
-          class="ma-0"
-          icon
-          flat
-          @click="eject"
-          :disabled="tapeNotPresent || playing"
-        >
-          <v-icon>eject</v-icon>
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </div>
+    <v-btn
+      slot="actions"
+      class="ma-0"
+      icon
+      flat
+      @click="newTape"
+      :disabled="!tapeNotPresent || playing"
+    >
+      <v-icon small>create</v-icon>
+    </v-btn>
+    <v-btn
+      slot="actions"
+      class="ma-0"
+      icon
+      flat
+      @click="uploadTape"
+      :disabled="!tapeNotPresent || playing"
+    >
+      <v-icon>add</v-icon>
+    </v-btn>
+    <v-btn
+      slot="actions"
+      class="ma-0"
+      icon
+      flat
+      @click="downloadTape"
+      :disabled="tapeNotPresent || playing"
+    >
+      <v-icon>save_alt</v-icon>
+    </v-btn>
+    <v-btn
+      slot="actions"
+      class="ma-0"
+      icon
+      flat
+      @click="eject"
+      :disabled="tapeNotPresent || playing"
+    >
+      <v-icon>eject</v-icon>
+    </v-btn>
+  </equipment>
 </template>
 
 <script>
@@ -103,6 +97,7 @@
   import DropZone from './DropZone';
   import LedIndicator from './LedIndicator';
   import { ExidyArrayTape } from 'js-sorcerer';
+  import Equipment from './Equipment';
 
   export default {
     props: {
@@ -158,7 +153,7 @@
         }
       },
       newTape() {
-        const array = new Uint8Array();
+        const array = new Uint8Array(47336);
         this.attachTape(array);
       },
       eject() {
@@ -219,7 +214,8 @@
     components: {
       DropZone,
       LedIndicator,
-      Tape
+      Tape,
+      Equipment
     }
   }
 </script>

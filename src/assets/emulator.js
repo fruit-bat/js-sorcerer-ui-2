@@ -43,6 +43,10 @@ export default {
 
   ejectRom() {
     exidySorcerer.ejectRom();
+  },
+
+  govern(govern) {
+    exidySorcerer.govern = govern;
   }
 
 }

@@ -70,13 +70,7 @@
       </a>
 
 
-      <v-btn
-        icon
-        flat
-        @click="reset"
-      >
-        <v-icon>power_settings_new</v-icon>
-      </v-btn>
+
 
       <simple-printer
         class="pa-1"
@@ -108,9 +102,6 @@
     data: () => ({
     }),
     methods:{
-      reset() {
-        emulator.reset();
-      }
     },
     components: {
       FloppyDiskDrive,
