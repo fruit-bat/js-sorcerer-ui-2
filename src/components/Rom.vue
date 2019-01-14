@@ -7,7 +7,7 @@
       class="rom-label"
     >{{label}}</div>
     <img
-      src="../assets/rom-chip.svg"
+      src="@/assets/rom-chip.svg"
       height="85px"
       @click="clicked"
     />

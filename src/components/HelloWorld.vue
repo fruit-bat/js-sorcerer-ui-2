@@ -80,8 +80,7 @@
 </template>
 
 <script>
-  // TODO work out how to use project relative paths
-  import emulator from '../assets/emulator';
+  import emulator from '@/assets/emulator';
   import SimplePrinter from './SimplePrinter';
 
 

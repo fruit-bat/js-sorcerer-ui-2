@@ -6,7 +6,7 @@
       class="tape-label"
     >{{label}}</div>
     <img
-      src="../assets/tape.svg"
+      src="@/assets/tape.svg"
       width="130px"
       @click="clicked"
     />

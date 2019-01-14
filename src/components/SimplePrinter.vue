@@ -45,7 +45,7 @@
   </equipment>
 </template>
 <script>
-  import emulator from '../assets/emulator';
+  import emulator from '@/assets/emulator';
   import { ExidyElementPrinter } from 'js-sorcerer';
   import Equipment from './Equipment';
 

@@ -57,7 +57,7 @@
 </template>
 
 <script>
-  import emulator from '../assets/emulator';
+  import emulator from '@/assets/emulator';
   import Rom from './Rom';
   import DropZone from './DropZone';
   import Equipment from './Equipment';

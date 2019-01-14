@@ -97,9 +97,8 @@
 </template>
 
 <script>
-  // TODO work out how to use project relative paths
   import Equipment from './Equipment';
-  import emulator from '../assets/emulator';
+  import emulator from '@/assets/emulator';
   import DropZone from './DropZone';
   import { ExidyArrayDisk } from 'js-sorcerer';
   import LedIndicator from './LedIndicator';

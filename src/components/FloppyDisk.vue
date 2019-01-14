@@ -6,7 +6,7 @@
       class="disk-label"
     >{{label}}</div>
     <img
-      src="../assets/floppy-disk.svg"
+      src="@/assets/floppy-disk.svg"
       width="130px"
       @click="clicked"
     />

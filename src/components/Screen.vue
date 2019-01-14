@@ -25,7 +25,7 @@
 
 <script>
 
-  import emulator from '../assets/emulator';
+  import emulator from '@/assets/emulator';
   import Equipment from './Equipment';
   import Toggle from './Toggle';
 

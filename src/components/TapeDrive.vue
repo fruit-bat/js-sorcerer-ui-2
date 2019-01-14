@@ -92,7 +92,7 @@
 </template>
 
 <script>
-  import emulator from '../assets/emulator';
+  import emulator from '@/assets/emulator';
   import Tape from './Tape';
   import DropZone from './DropZone';
   import LedIndicator from './LedIndicator';
