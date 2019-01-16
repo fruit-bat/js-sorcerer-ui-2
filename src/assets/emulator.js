@@ -47,6 +47,9 @@ export default {
 
   govern(govern) {
     exidySorcerer.govern = govern;
-  }
+  },
 
+  getMem(start, length) {
+    return exidySorcerer.getMem(start, length);
+  }
 }

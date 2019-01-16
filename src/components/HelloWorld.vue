@@ -75,6 +75,8 @@
       <simple-printer
         class="pa-1"
       />
+      <mem-viewer
+      />
     </v-layout>
   </v-container>
 </template>
@@ -93,6 +95,7 @@
   import Screen from './Screen';
   import TapeBox from './TapeBox';
   import TapeDrive from './TapeDrive';
+  import MemViewer from './MemViewer';
 
   export default {
     mounted() {
@@ -111,7 +114,8 @@
       Screen,
       FloppyDiskBox,
       TapeBox,
-      TapeDrive
+      TapeDrive,
+      MemViewer
     }
   }
 </script>
