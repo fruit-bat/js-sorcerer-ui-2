@@ -2,7 +2,6 @@ import { ExidyFileBinaryAjax, ExidySorcerer, ExidyBrowserKeyboard } from 'js-sor
 
 const exidyFile = new ExidyFileBinaryAjax();
 const exidySorcerer = new ExidySorcerer(exidyFile);
-const keyboard = new ExidyBrowserKeyboard(exidySorcerer.keyboard);
 //exidySorcerer.loadRomPack('Exidy Standard Basic Ver 1.0 (1978).ROM');
 //exidySorcerer.loadRomPack('Exidy Z80 Development Pac (1979).ROM');
 //exidySorcerer.loadRomPack('Exidy Word Processor Pac (1979).ROM');
@@ -10,7 +9,7 @@ const keyboard = new ExidyBrowserKeyboard(exidySorcerer.keyboard);
 export default {
 
 	getKeyboard() {
-		return keyboard;
+		return exidySorcerer.keyboard;
 	},
 
 	getCanvas() {

@@ -28,23 +28,26 @@
   import emulator from '@/assets/emulator';
   import Equipment from './Equipment';
   import Toggle from './Toggle';
+  import { ExidyBrowserKeyboard } from 'js-sorcerer';
 
   export default {
     mounted() {
       const screenContainer = this.$refs.screen;
       screenContainer.appendChild(emulator.getCanvas());
+      this.keyboard = new ExidyBrowserKeyboard(emulator.getKeyboard());
     },
     data: () => ({
-      govern: true
+      govern: true,
+      keyboard: null
     }),
     methods:{
       keydownHandler(key) {
-        emulator.getKeyboard().browserKeyDown(key.keyCode);
+        this.keyboard.browserKeyDown(key.keyCode);
         key.stopPropagation();
         key.preventDefault();
       },
       keyupHandler(key) {
-        emulator.getKeyboard().browserKeyUp(key.keyCode);
+        this.keyboard.browserKeyUp(key.keyCode);
         key.stopPropagation();
         key.preventDefault();
       },

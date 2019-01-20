@@ -51,6 +51,7 @@
 
       </v-layout>
 
+      <keyboard />
 
       <tape-box
         class="pa-1"
@@ -96,6 +97,7 @@
   import TapeBox from './TapeBox';
   import TapeDrive from './TapeDrive';
   import MemViewer from './MemViewer';
+  import Keyboard from './Keyboard';
 
   export default {
     mounted() {
@@ -115,7 +117,8 @@
       FloppyDiskBox,
       TapeBox,
       TapeDrive,
-      MemViewer
+      MemViewer,
+      Keyboard
     }
   }
 </script>
