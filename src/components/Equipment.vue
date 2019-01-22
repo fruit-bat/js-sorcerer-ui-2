@@ -26,6 +26,7 @@
 .equipment {
   border-radius: 10px;
   width:fit-content;
+  background-color: #eee !important;
 }
 
 </style>

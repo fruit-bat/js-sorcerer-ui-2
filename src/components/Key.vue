@@ -3,24 +3,26 @@
   <div
     class="exidy-key"
     icon
-    @mousedown="pressed=true"
-    @mouseup="pressed=false"
-    :style="{ backgroundColor: active ? 'green' : '#cdc294'}"
-
+    @mousedown="pressHandler(true, $event)"
+    @mouseup="pressHandler(false, $event)"
+    :style="{ backgroundColor: active ? 'green' : color}"
   >
     <div
-      style="color:white;"
+      :style="{ width: 32*width + 'px', color: 'white', height: '32px' }"
     >
-      <div
-        style="height:17px;width:36px;"
-      >
-        <slot name="top">{{top}}</slot>
-      </div>
-      <div
-        style="height:18px;width:36px;"
-      >
-        <slot name="bottom" >{{bottom}}</slot>
-      </div>
+      <slot name="content">
+        <div
+          class="exidy-key-half"
+          style="paddingTop:2px"
+        >
+          <slot name="top">{{top}}</slot>
+        </div>
+        <div
+          class="exidy-key-half"
+        >
+          <slot name="bottom" >{{bottom}}</slot>
+        </div>
+      </slot>
     </div>
   </div>
 </template>
@@ -29,6 +31,10 @@
 
   export default {
     props: {
+      width: {
+        type: Number,
+        default: 1.0
+      },
       keyId: {
         type: String,
         default: null
@@ -44,11 +50,22 @@
       keystate: {
         type: Object,
         default: () => { return {}; }
+      },
+      toggle: {
+        type: Boolean,
+        default: false
+      },
+      dark: {
+        type: Boolean,
+        default: null
       }
     },
     computed: {
       active() {
         return this.pressed || this.keystate[this.keyId];
+      },
+      color() {
+        return this.dark ? "#413a41" : '#cdc294';
       }
     },
     mounted() {
@@ -59,10 +76,24 @@
     watch: {
       pressed() {
         this.$emit('pressed', { keyId: this.keyId, pressed: this.pressed });
+      },
+      group() {
+        if (this.toggle && !this.group) {
+          this.pressed = false;
+        }
       }
     },
     methods:{
-
+      pressHandler(p, event) {
+        console.log(event);
+        if (this.toggle || event.ctrlKey) {
+          if (p) this.pressed = !this.pressed;
+          this.$emit('toggled', this.pressed);
+        }
+        else {
+          this.pressed = p;
+        }
+      }
     },
     components: {
     }
@@ -81,5 +112,10 @@
   padding:0px;
   border-width:0px;
   user-select: none;
+  font-size: 14px;
+  line-height:14px;
+}
+.exidy-key-half {
+  height:16px;
 }
 </style>
