@@ -85,7 +85,6 @@
     },
     methods:{
       pressHandler(p, event) {
-        console.log(event);
         if (this.toggle || event.ctrlKey) {
           if (p) this.pressed = !this.pressed;
           this.$emit('toggled', this.pressed);

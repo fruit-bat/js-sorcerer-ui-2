@@ -149,7 +149,7 @@
                 REPEAT
               </div>
             </key>
-            <key key-id="unknown3" @pressed="keypress" :keystate="keystate" dark>
+            <key key-id="RUN STOP" @pressed="keypress" :keystate="keystate" dark>
               <div slot="content" style="font-size:9px;line-height:10px;padding-top:6px;">
                 RUN
               </div>

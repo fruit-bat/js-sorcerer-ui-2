@@ -51,7 +51,7 @@
 
       </v-layout>
 
-      <keyboard />
+      <keyboard class="pa-1"/>
 
       <tape-box
         class="pa-1"
