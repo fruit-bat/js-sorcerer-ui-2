@@ -41,7 +41,7 @@
         <v-layout row style="margin-left:16px;">
           <v-layout row class="exidy-key-row">
             <Key key-id="Tab" @pressed="keypress" :keystate="keystate" :width="1.5">
-              <div slot="content" style="padding-top:6px;">
+              <div slot="content" style="padding-top:6px;font-size:11px;">
                 TAB
               </div>
               <div slot="content" style="font-size:9px;line-height:10px;">
@@ -161,7 +161,7 @@
         </v-layout>
         <v-layout row style="margin-left:126px">
           <v-layout row class="exidy-key-row">
-            <Key key-id="SPACE" top="" bottom="" @pressed="keypress" :keystate="keystate" :width="10"/>
+            <Key key-id="SPACE" top="" bottom="" @pressed="keypress" :keystate="keystate" :width="9"/>
           </v-layout>
         </v-layout>
       </v-layout>

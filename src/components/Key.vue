@@ -115,6 +115,7 @@
   line-height:14px;
 }
 .exidy-key-half {
-  height:16px;
+  padding-top:1px;
+  height:14px;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="width:fit-content">
     <v-card
       class="pa-1 equipment"
     >

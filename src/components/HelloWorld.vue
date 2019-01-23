@@ -5,9 +5,14 @@
       wrap
     >
       <v-layout row>
-        <screen
-          class="pa-1"
-        />
+
+        <div>
+          <screen
+            style="margin-left:auto;margin-right:auto"
+            class="pa-1"
+          />
+          <keyboard class="pa-1"/>
+        </div>
 
         <v-layout column>
           <v-layout row>
@@ -51,7 +56,7 @@
 
       </v-layout>
 
-      <keyboard class="pa-1"/>
+
 
       <tape-box
         class="pa-1"
