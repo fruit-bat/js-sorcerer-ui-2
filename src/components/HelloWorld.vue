@@ -11,7 +11,10 @@
             style="margin-left:auto;margin-right:auto"
             class="pa-1"
           />
-          <keyboard class="pa-1"/>
+          <keyboard
+            style="margin-left:auto;margin-right:auto"
+            class="pa-1"
+          />
         </div>
 
         <v-layout column>

@@ -6,6 +6,7 @@
       @keydown="keydownHandler"
       ref="screen"
       tabindex="0"
+      :style="{ width: (scale * 512) + 'px', height: (scale * 480) + 'px', backgroundColor: 'green' }"
     />
     <toggle
       class="ma-0"
@@ -31,6 +32,12 @@
   import { ExidyBrowserKeyboard } from 'js-sorcerer';
 
   export default {
+    props: {
+      scale: {
+        type: Number,
+        default: 1
+      }
+    },
     mounted() {
       const screenContainer = this.$refs.screen;
       screenContainer.appendChild(emulator.getCanvas());
@@ -71,8 +78,6 @@
     background-color: #000;
     border:5px solid #000;
     border-radius: 5px !important;
-    width: 512px;
-    height: 480px;
     box-sizing: content-box;
   }
   .exidy-screen-container canvas {
@@ -82,6 +87,7 @@
     image-rendering: optimize-contrast;
     image-rendering: pixelated;
     -ms-interpolation-mode: nearest-neighbor;
-    width: 512px; height: 480px;
+    height: 100%;
+    width: 100%;
   }
 </style>
