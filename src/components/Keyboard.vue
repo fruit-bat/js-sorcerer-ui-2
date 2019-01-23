@@ -1,7 +1,16 @@
 
 <template>
   <equipment>
-    <v-layout row class="pa-2" style="background-color:#d0cfba">
+    <div
+      style="fit-content"
+      @keyup.stop="keyupHandler"
+      @keydown.stop="keydownHandler"
+      tabindex="0"
+    >
+    <v-layout
+      row class="pa-2"
+      style="background-color:#d0cfba"
+    >
       <v-layout column>
         <v-layout row style="margin-left:16px">
           <v-layout row class="exidy-key-row">
@@ -192,6 +201,7 @@
         </v-layout>
       </v-layout>
     </v-layout>
+    </div>
   </equipment>
 </template>
 
@@ -220,6 +230,14 @@
         else {
           emulator.getKeyboard().releaseKey(keyId);
         }
+      },
+      keydownHandler(key) {
+        emulator.getBrowserKeyboard().browserKeyDown(key.keyCode);
+        key.preventDefault();
+      },
+      keyupHandler(key) {
+        emulator.getBrowserKeyboard().browserKeyUp(key.keyCode);
+        key.preventDefault();
       }
     },
     components: {

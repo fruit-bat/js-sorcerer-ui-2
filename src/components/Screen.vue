@@ -2,8 +2,8 @@
   <equipment>
     <div
       class="exidy-screen-container"
-      @keyup="keyupHandler"
-      @keydown="keydownHandler"
+      @keyup.stop="keyupHandler"
+      @keydown.stop="keydownHandler"
       ref="screen"
       tabindex="0"
       :style="{ width: (scale * 512) + 'px', height: (scale * 480) + 'px', backgroundColor: 'green' }"
@@ -41,21 +41,17 @@
     mounted() {
       const screenContainer = this.$refs.screen;
       screenContainer.appendChild(emulator.getCanvas());
-      this.keyboard = new ExidyBrowserKeyboard(emulator.getKeyboard());
     },
     data: () => ({
-      govern: true,
-      keyboard: null
+      govern: true
     }),
     methods:{
       keydownHandler(key) {
-        this.keyboard.browserKeyDown(key.keyCode);
-        key.stopPropagation();
+        emulator.getBrowserKeyboard().browserKeyDown(key.keyCode);
         key.preventDefault();
       },
       keyupHandler(key) {
-        this.keyboard.browserKeyUp(key.keyCode);
-        key.stopPropagation();
+        emulator.getBrowserKeyboard().browserKeyUp(key.keyCode);
         key.preventDefault();
       },
       reset() {
