@@ -17,6 +17,14 @@
       slot="actions"
       icon
       flat
+      @click="running = !running"
+    >
+      <v-icon>{{ running ? 'pause' : 'play_arrow' }}</v-icon>
+    </v-btn>
+    <v-btn
+      slot="actions"
+      icon
+      flat
       @click="reset"
     >
       <v-icon>power_settings_new</v-icon>
@@ -43,7 +51,8 @@
       screenContainer.appendChild(emulator.getCanvas());
     },
     data: () => ({
-      govern: true
+      govern: true,
+      running: true
     }),
     methods:{
       keydownHandler(key) {
@@ -61,6 +70,10 @@
     watch: {
       govern() {
         emulator.govern(this.govern);
+      },
+      running() {
+        if (this.running) emulator.run();
+        else emulator.stop();
       }
     },
     components: {

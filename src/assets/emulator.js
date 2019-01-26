@@ -26,6 +26,10 @@ export default {
 		exidySorcerer.run();
 	},
 
+	stop() {
+		exidySorcerer.stop();
+	},
+
   reset() {
     exidySorcerer.reset();
   },

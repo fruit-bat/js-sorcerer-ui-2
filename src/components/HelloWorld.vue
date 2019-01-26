@@ -12,6 +12,7 @@
             class="pa-1"
           />
           <keyboard
+            v-if="virtualKeyboard"
             style="margin-left:auto;margin-right:auto"
             class="pa-1"
           />
@@ -79,12 +80,12 @@
       </a>
 
 
-
-
       <simple-printer
+        v-if="centronicsPrinter"
         class="pa-1"
       />
       <mem-viewer
+        v-if="memoryViewer"
       />
     </v-layout>
   </v-container>
@@ -108,6 +109,20 @@
   import Keyboard from './Keyboard';
 
   export default {
+    props: {
+      centronicsPrinter: {
+        default: false,
+        type: Boolean
+      },
+      memoryViewer: {
+        default: false,
+        type: Boolean
+      },
+      virtualKeyboard: {
+        default: false,
+        type: Boolean
+      }
+    },
     mounted() {
       emulator.run();
     },

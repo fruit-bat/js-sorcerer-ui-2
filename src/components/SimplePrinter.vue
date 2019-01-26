@@ -59,6 +59,9 @@
       this._printer = new ExidyElementPrinter(this.$refs.paper);
       emulator.attachPrinter(this._printer);
     },
+    beforeDestroy() {
+      emulator.attachPrinter(null);
+    },
     data: () => ({
       printer: null,
       autoScroll: true
