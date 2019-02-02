@@ -5,6 +5,7 @@
     icon
     @mousedown="pressHandler(true, $event)"
     @mouseup="pressHandler(false, $event)"
+    @mouseleave="pressHandler(false, $event)"
     :style="{ backgroundColor: active ? 'green' : color}"
   >
     <div
