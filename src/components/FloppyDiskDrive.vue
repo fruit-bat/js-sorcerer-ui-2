@@ -106,31 +106,42 @@
       },
       diskNotPresent() {
         return this.floppyDisk === null;
-      },
-      driveWriting() {
-        return this.driveWritingTick > 0;
       }
     },
     beforeDestroy() {
-      clearInterval(this.driveWritingTimer);
+      this.detach()
     },
     mounted() {
-      this.driveWritingTimer = setInterval(
-        () => {
-          if (this.driveWritingTick > 0) --this.driveWritingTick;
-        },
-        1000
-      );
+      this.attach();
     },
     data: () => ({
       floppyDisk: null,
       diskArray: null,
       driveActive: false,
-      driveWritingTimer: null,
-      driveWritingTick: 0,
+      driveWriting: false,
       diskRequiresSave: false
     }),
     methods: {
+      getDisk() {
+        return emulator.getDiskSystem().then(ds => {
+          return ds.getDiskDrive(this.unit);
+        });
+      },
+      attach() {
+        this.getDisk().then(disk => {
+          disk.motorListener = driveActive => { this.driveActive = driveActive; };
+          disk.writeListener = driveWriting => {
+            this.driveWriting = driveWriting;
+            if (this.floppyDisk) this.diskRequiresSave = true;
+          };
+        });
+      },
+      detach() {
+        this.getDisk().then(disk => {
+          disk.motorListener = null;
+          disk.writeListener = null;
+        });
+      },
       downloadDisk() {
         const blob = new Blob([this.diskArray], {type: "application/binary"});
         const link = this.$refs.link;
@@ -168,26 +179,9 @@
         const floppyDisk = new ExidyArrayDisk(array);
         const driveLetter = this.driveLetter;
         const unit = this.unit;
-        const that = this;
-        const wrappedFloppyDisk = {
-          read(track, sector, offset) {
-          return floppyDisk.read(track, sector, offset);
-          },
-          write(track, sector, offset, data) {
-            floppyDisk.write(track, sector, offset, data);
-            that.driveWritingTick = 5;
-            that.diskRequiresSave = true;
-          },
-          activate() {
-            that.driveActive = true;
-          },
-          deactivate() {
-            that.driveActive = false;
-          }
-        };
         emulator.getDiskSystem().then(ds => {
-          ds.insertDisk(wrappedFloppyDisk, this.unit);
-          this.floppyDisk = wrappedFloppyDisk;
+          ds.insertDisk(floppyDisk, this.unit);
+          this.floppyDisk = floppyDisk;
           this.diskRequiresSave = false;
           this.diskArray = array;
         });
@@ -223,8 +217,7 @@
             const array = new Uint8Array(buffer);
             this.attachDisk(array);
           })
-          .catch(err => console.error(err)); // Never forget the final catch!
-
+          .catch(err => console.error(err));
       }
     },
     components: {

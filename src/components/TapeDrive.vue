@@ -57,7 +57,6 @@
     </v-btn>
     <upload-file-btn
       slot="actions"
-      :disabled="!tapeNotPresent || playing"
       @input="fileForUpload"
     />
     <v-btn
@@ -95,29 +94,53 @@
   export default {
     props: {
       unit: {
-        default: 0,
+        default: null,
         type: Number
       }
     },
     computed: {
       tapeNotPresent() {
         return this.tape === null;
-      },
-      recording() {
-        return false;
       }
     },
     beforeDestroy() {
+      this.detach();
     },
     mounted() {
+      if (this.unit !== null) this.attach();
     },
     data: () => ({
       tape: null,
       tapeArray: null,
       playing: false,
+      recording: false,
       tapeRequiresSave: false
     }),
+    watch: {
+      unit(unit) {
+        if (unit !== null) {
+          this.attach();
+        }
+        else {
+          this.detach();
+        }
+      }
+    },
     methods: {
+      detach() {
+        emulator.getTapeSystem().then(ts => {
+          const tapeUnit = ts.getUnit(this.unit);
+          tapeUnit.motorListener = null;
+          tapeUnit.recordListener = null;
+        });
+      },
+      attach() {
+        emulator.getTapeSystem().then(ts => {
+          const tapeUnit = ts.getUnit(this.unit);
+          tapeUnit.motorListener = playing => { this.playing = playing };
+          tapeUnit.recordListener = recording => { this.recording = recording };
+        });
+      },
       downloadTape() {
         const blob = new Blob([this.tapeArray], {type: "application/binary"});
         const link = this.$refs.link;
@@ -150,7 +173,6 @@
         });
       },
       fileForUpload(file) {
-        // TODO Check file length
         const reader = new FileReader();
         reader.onloadend = evt => {
           if (evt.target.readyState == FileReader.DONE) {
