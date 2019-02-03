@@ -1,17 +1,18 @@
 <template>
   <div class="addfile">
     <input type="file" @change="onFileChange"/>
-
     <v-tooltip
-      left
+      top
     >
       <span slot="activator">
         <v-btn
+          class="ma-0"
           icon
+          flat
           @click="onClick"
           :disabled="disabled"
         >
-          <v-icon color="secondary">fa-plus</v-icon>
+          <v-icon color="secondary">add</v-icon>
         </v-btn>
       </span>
       <span>{{label}}</span>
@@ -29,7 +30,7 @@ export default {
       type: Boolean
     },
     label: {
-      default: 'Add document',
+      default: 'Upload',
       type: String
     }
   },
@@ -54,7 +55,7 @@ export default {
     handleFiles(files) {
       for (let i = 0; i < files.length; i++) {
         let file = files[i];
-        this.$emit('file-for-upload', file);
+        this.$emit('input', file);
       }
     },
   },

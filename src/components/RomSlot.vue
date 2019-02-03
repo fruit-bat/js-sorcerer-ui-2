@@ -1,11 +1,5 @@
 <template>
   <equipment>
-    <input
-      ref='input'
-      type="file"
-      @change="onFileChange"
-      style="display: none"
-    />
     <a
       ref='link'
       style="display: none"
@@ -14,25 +8,15 @@
       @file-for-upload="fileForUpload"
       @url-for-upload="urlForUpload"
     >
-      <div
-        @click="romClicked"
-      >
-        <rom
-          :disabled="romNotPresent"
-          :label="romLabel"
-        />
-      </div>
+      <rom
+        :disabled="romNotPresent"
+        :label="romLabel"
+      />
     </drop-zone>
-
-    <v-btn
+    <upload-file-btn
       slot="actions"
-      class="ma-0"
-      icon
-      flat
-      @click="uploadRom"
-    >
-      <v-icon>add</v-icon>
-    </v-btn>
+      @input="fileForUpload"
+    />
     <v-btn
       slot="actions"
       class="ma-0"
@@ -61,6 +45,7 @@
   import Rom from './Rom';
   import DropZone from './DropZone';
   import Equipment from './Equipment';
+  import UploadFileBtn from './UploadFileBtn';
 
   export default {
     props: {
@@ -77,14 +62,6 @@
       romLabel: null
     }),
     methods: {
-      onFileChange(e) {
-        this.handleFiles(e.target.files);
-      },
-      handleFiles(files) {
-        for (let i = 0; i < files.length; i++) {
-          this.fileForUpload(files[i]);
-        }
-      },
       downloadRom() {
         const blob = new Blob([this.romArray], {type: "application/binary"});
         const link = this.$refs.link;
@@ -117,13 +94,14 @@
         }
       },
       fileForUpload(file) {
-        // TODO Check file length
+        console.log(file);
         const reader = new FileReader();
         reader.onloadend = evt => {
           if (evt.target.readyState == FileReader.DONE) {
             const blob = evt.target.result;
             const array = new Uint8Array(blob);
-            this.insertRom(array);
+            const name = this.urlToName(file.name);
+            this.insertRom(array, name);
           }
         };
         reader.readAsArrayBuffer(file);
@@ -134,6 +112,14 @@
         }
         return response;
       },
+      urlToName(url) {
+        console.log(url);
+        const lastElement = url.substr(url.lastIndexOf('/') + 1);
+        console.log(lastElement);
+        const name = lastElement.replace(/\.[^/.]+$/, "")
+        console.log(name);
+        return name;
+      },
       urlForUpload(url) {
         console.log('Load rom from URL ' + url);
         // TODO limit read length
@@ -141,11 +127,7 @@
           .then(response => {
             console.log(response);
             const url = decodeURI(response.url);
-            console.log(url);
-            const lastElement = url.substr(url.lastIndexOf('/') + 1);
-            console.log(lastElement);
-            const name = lastElement.replace(/\.[^/.]+$/, "")
-            console.log(name);
+            const name = this.urlToName(url);
             this.checkResponseStatus(response);
             response.arrayBuffer().then(buffer => {
               console.log(buffer);
@@ -159,7 +141,8 @@
     components: {
       Rom,
       DropZone,
-      Equipment
+      Equipment,
+      UploadFileBtn
     }
   }
 </script>

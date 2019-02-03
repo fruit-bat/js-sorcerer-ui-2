@@ -6,6 +6,7 @@
         style="width:fit-content;height:fit-content"
       >
         <floppy-disk
+          class="pa-1"
           label="CP/M boot"
         />
       </a>
@@ -14,6 +15,7 @@
         style="width:fit-content;height:fit-content"
       >
         <floppy-disk
+          class="pa-1"
           label="disk1"
         />
       </a>

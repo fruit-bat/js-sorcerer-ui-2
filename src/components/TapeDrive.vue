@@ -1,51 +1,48 @@
 
 <template>
   <equipment>
-    <input
-      ref='input'
-      type="file"
-      @change="onFileChange"
-      style="display: none"
-    />
     <a
       ref='link'
       style="display: none"
     />
+
+    <v-layout row
+      class="pt-0 pb-0 pl-2 pr-2"
+    >
+      <div
+        class="tape-drive-label"
+      >
+        Deck {{unit+1}}
+     </div>
+     <v-spacer />
+     <led-indicator
+        :on="playing"
+        color="green"
+      />
+      <led-indicator
+        :on="recording"
+        color="red"
+      />
+    </v-layout>
+
     <drop-zone
       @file-for-upload="fileForUpload"
       @url-for-upload="urlForUpload"
     >
-      <div
-        class="tape-drive"
-        @click="tapeClicked"
-      >
-        <div
-          style="background:#222;border-style:solid;border-radius:7px;border-width:4px;"
-        >
-          <div
-          >
-          <tape
-            :style="{ opacity: tapeNotPresent ? 0 : 1}"
-          />
-          </div>
-        </div>
-        <v-layout row>
-         <led-indicator
-            :on="playing"
-            color="green"
-          />
-          <led-indicator
-            :on="recording"
-            color="red"
-          />
-          <v-spacer />
-          <div
-            class="tape-drive-label"
-          >
-            tape {{unit}}
-          </div>
-        </v-layout>
-      </div>
+      <img
+        v-if="tapeNotPresent"
+        src="../assets/casette-deck-empty.svg"
+        width="160px"
+        height="100px"
+        draggable="false"
+      />
+      <img
+        v-if="!tapeNotPresent"
+        src="../assets/casette-deck-loaded.svg"
+        width="160px"
+        height="100px"
+        draggable="false"
+      />
     </drop-zone>
 
     <v-btn
@@ -58,16 +55,11 @@
     >
       <v-icon small>create</v-icon>
     </v-btn>
-    <v-btn
+    <upload-file-btn
       slot="actions"
-      class="ma-0"
-      icon
-      flat
-      @click="uploadTape"
       :disabled="!tapeNotPresent || playing"
-    >
-      <v-icon>add</v-icon>
-    </v-btn>
+      @input="fileForUpload"
+    />
     <v-btn
       slot="actions"
       class="ma-0"
@@ -98,6 +90,7 @@
   import LedIndicator from './LedIndicator';
   import { ExidyArrayTape } from 'js-sorcerer';
   import Equipment from './Equipment';
+  import UploadFileBtn from './UploadFileBtn';
 
   export default {
     props: {
@@ -125,32 +118,12 @@
       tapeRequiresSave: false
     }),
     methods: {
-      onFileChange(e) {
-        if (this.tapeNotPresent) {
-          this.handleFiles(e.target.files);
-        }
-      },
-      handleFiles(files) {
-        for (let i = 0; i < files.length; i++) {
-          this.fileForUpload(files[i]);
-        }
-      },
       downloadTape() {
         const blob = new Blob([this.tapeArray], {type: "application/binary"});
         const link = this.$refs.link;
         link.href = window.URL.createObjectURL(blob);
         link.download="a.tape";
         link.click();
-      },
-      uploadTape() {
-        if (this.tapeNotPresent) {
-          this.$el.querySelector('input').click();
-        }
-      },
-      tapeClicked() {
-        if (this.tapeNotPresent) {
-          this.uploadTape();
-        }
       },
       newTape() {
         const array = new Uint8Array(47336);
@@ -215,7 +188,8 @@
       DropZone,
       LedIndicator,
       Tape,
-      Equipment
+      Equipment,
+      UploadFileBtn
     }
   }
 </script>

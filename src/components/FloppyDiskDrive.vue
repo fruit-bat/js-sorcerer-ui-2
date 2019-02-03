@@ -1,11 +1,5 @@
 <template>
   <equipment>
-    <input
-      ref='input'
-      type="file"
-      @change="onFileChange"
-      style="display: none"
-    />
     <a
       ref='link'
       style="display: none"
@@ -16,7 +10,6 @@
     >
       <div
         class="floppy-disk-drive"
-        @click="diskClicked"
       >
         <div
           style="position:absolute;top:10px;background-color:#cca;padding:0px 5px 0px 5px;border-radius:3px"
@@ -62,16 +55,11 @@
     >
       <v-icon small>create</v-icon>
     </v-btn>
-    <v-btn
+    <upload-file-btn
       slot="actions"
-      class="ma-0"
-      icon
-      flat
-      @click="uploadDisk"
       :disabled="!diskNotPresent || driveActive"
-    >
-      <v-icon>add</v-icon>
-    </v-btn>
+      @input="fileForUpload"
+    />
     <v-btn
       slot="actions"
       class="ma-0"
@@ -103,6 +91,7 @@
   import { ExidyArrayDisk } from 'js-sorcerer';
   import LedIndicator from './LedIndicator';
   import { SECTORS_PER_TRACK, NUMBER_OF_TRACKS, BYTES_PER_SECTOR } from 'js-sorcerer';
+  import UploadFileBtn from './UploadFileBtn';
 
   export default {
     props: {
@@ -142,16 +131,6 @@
       diskRequiresSave: false
     }),
     methods: {
-      onFileChange(e) {
-        if (this.diskNotPresent) {
-          this.handleFiles(e.target.files);
-        }
-      },
-      handleFiles(files) {
-        for (let i = 0; i < files.length; i++) {
-          this.fileForUpload(files[i]);
-        }
-      },
       downloadDisk() {
         const blob = new Blob([this.diskArray], {type: "application/binary"});
         const link = this.$refs.link;
@@ -251,7 +230,8 @@
     components: {
       DropZone,
       LedIndicator,
-      Equipment
+      Equipment,
+      UploadFileBtn
     }
   }
 </script>
